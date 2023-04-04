@@ -1,0 +1,40 @@
+#coding=utf-8
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+#读取数据
+data1 = pd.read_csv('E2.csv')
+#把变量转换为虚拟变量
+data2 = pd.get_dummies(data1, columns=['性别', '出生日期', '最高学历', '企业性质','最高学历毕业时间'])
+#建立模型
+model1 = ols('平均成绩 ~ 性别 + 出生日期 + 企业性质 + 最高学历 +最高学历毕业时间', data=data1).fit()
+#方差分析
+anova_table1 = sm.stats.anova_lm(model1, typ=2)
+#存到csv文件
+anova_table1.to_csv('anova_table1.csv')
+#打印结果
+print(anova_table1)
+
+               sum_sq     df         F    PR(>F)
+性别         127.092799    1.0  3.224089  0.074359
+出生日期       267.081818    2.0  3.387665  0.036112
+企业性质        47.838629    2.0  0.606785  0.546291
+最高学历       363.787346    2.0  4.614277  0.011198
+最高学历毕业时间    59.592806    2.0  0.755875  0.471190
+Residual  6622.518327  168.0       NaN       NaN
+
+结果如上，分析的企业性质和最高学历毕业时间对因变量无显著影响因此去掉再
+
+data3 = pd.get_dummies(data1, columns=['性别', '出生日期', '最高学历', ])
+
+model2 = ols('平均成绩 ~ 性别 + 出生日期  + 最高学历 ', data=data1).fit()
+model3 = ols('平均成绩 ~ 性别_男 + 性别_女 + 出生日期_50年代 + 出生日期_60年代 + 出生日期_70年代 + '
+            '最高学历_大专 + 最高学历_本科 + '
+            '最高学历_硕士或以上 ', data=data2).fit()
+
+
+anova_table1 = sm.stats.anova_lm(model1, typ=1)
+model2.summary= model2.summary()
+
+print(anova_table1)
+print(model2.summary)
