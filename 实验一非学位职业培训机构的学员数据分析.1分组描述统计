@@ -1,0 +1,31 @@
+#coding=utf-8
+import pandas as pd
+# 加载数据
+df = pd.read_csv('E2.csv', encoding="utf-8")
+df.rename(columns={
+                    '性别': 'x1',
+                     '出生日期': 'x2',
+                     '企业性质': 'x3',
+                     '最高学历': 'x4',
+                     '最高学历毕业时间': 'x5'},
+            inplace=True)
+
+grouped_1 = df.groupby('x1')
+result_1 = grouped_1.describe()
+result_1.to_csv('gender.csv')
+
+grouped_2 = df.groupby('x2')
+result_2 = grouped_2.describe()
+result_2.to_csv('born.csv')
+
+grouped_3 = df.groupby('x3')
+result_3 = grouped_3.describe()
+result_3.to_csv('company.csv')
+
+grouped_4 = df.groupby('x4')
+result_4 = grouped_4.describe()
+result_4.to_csv('education.csv')
+
+grouped_5= df.groupby('x5')
+result_5 = grouped_5.describe()
+result_5.to_csv('graduate.csv')
